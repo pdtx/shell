@@ -1,0 +1,320 @@
+linux常用命令学习记录
+
+一：文件处理命令
+	目录处理命令	ls -i 显示文件的i节点 标识号 内核调用区分
+					mkdir -p 递归创建目录
+					cd
+					pwd
+					rmdir
+					cp -r 复制目录	-p 保留文件属性	//可以同时复制多个文件
+					mv 剪切文件、改名
+					rm -r 递归 -f 强制
+	文件处理命令
+					touch	//可以同时创建多个文件 touch a b 
+					cat 显示文件内容 -n 显示行号
+					tac 显示文件内容（反向列示 从最后一行显示）
+					more （空格）或f 翻页 （enter） 换行 q 退出 //分页显示文件内容
+					less 分页显示文件内容 （可向上翻页 pageup pagedown 可以搜索 eg: /service n 表示next） //less 更好用
+					head 显示文件前面几行 -n 指定行数 	head -n 20 /etc/services
+					tail 显示文件后面几行 -n 指定行数 -f 动态显示文件末尾内容
+	连接命令
+					ln -s 原文件 目标文件 -s 创建软链接（软链接类似于 windows 快捷方式；硬 同步更新）不能跨分区、不能针对目录使用
+	权限管理命令
+					chmod -R 递归修改 [{ugoa}{+-=}{rwx}] [mode=421]
+					chown [用户][文件或目录]
+					chgrp [用户组][文件或目录]	改变文件或目录的所属组
+					umask [-S 以RWX 形式显示新建文件缺省权限]  显示、设置文件的缺省权限	（0022 0 表示特殊权限 权限掩码 777-022=755）	eg：umask 023
+	文件搜索命令
+					find [搜索范围][匹配条件] eg：find /etc -name init（精准匹配） 支持正则表达式 * ？任意字符 单个字符 	严格区分大小写  ； 基于分区、目录、硬盘查找
+						不区分大小写 -i ，-size 基于文件大小 eg：find / -size +204800 （1 数据块 512字节 0.5KB +n大于 -n小于 n 等于）
+						-user -group （-amin 访问时间 -cmin 文件属性 -mmin 文件内容 eg: find /etc -cmin 5 5分钟内被修改过属性的文件和目录）
+						find /etc +163820 -a -size -204800 (-a 同时满足 -o 只满足一个)	-type f 文件 d目录 l软连接文件
+						find /etc -name init -exec ls -l {} \;	执行多个命名
+					locate 文件名 （在文件资料库中查找文件 类似windows中的 everything）locate locate 搜索其资料库 updatedb 更新资料库 /tmp 不会在资料库中
+					which  	搜索命令所在目录以及别名信息
+					whereis 搜索命令所在目录以及帮助文档路径
+					grep -iv [指定字串][文件] 在文件中搜寻字串匹配的行并输出 -i 不区分大小写 -v 排除指定字串 表示行首的 ^
+	帮助命令	
+					man [命令配置文件]		eg：man services 查看配置文件的帮助信息	//不需要加上绝对路径
+					whatis eg：whatis ls 查看命令简单的介绍
+					apropos eg：apropos inittable 查看配置文件的简短信息
+					info 类似于man
+					help 获得shell内置命令的帮助信息 eg： help cd  // man 查看不了shell内置命令
+
+	压缩解压缩命令	
+					gzip 文件名	 压缩文件 .gz 
+					gunzip 解压缩.gz 的压缩文件
+					tar 打包、解包、压缩、解压缩 	-c打包 -x解包  .tar.gz
+					zip 选项[-r] [压缩后文件名][文件或目录] -r 压缩目录
+					unzip	
+					bzip2
+	网络命令
+					write <用户名> 	给用户发信息，ctrl + D 保存
+					wall [message]	发广播信息
+					ping
+					ifconfig 网卡名称 ip地址 //查看和设置网卡信息	eg：ifconfig eth0 127.0.0.1
+					last 列出目前与过去登入系统的用户信息
+					lastlog -u 用户UID //查看某一用户的登录信息
+					traceroute 显示数据包到主机间的路径 eg：traceroute www.baidu.com
+					netstat [选项] 显示网络相关信息 -t TCP协议  -u UDP协议 -l 监听 -r 路由 -n 显示IP地址和端口号  eg: netstat -tlun 查看本机监听的端口网络 -an 查看本机所有的网络连接 -rn 查看本机路由表
+					setup 配置网络
+					mount [-t 文件系统] 设备文件名 挂载点
+	关机重启命令
+					shutdown -c 取消前一个关机命令 -h 关机 -r 重启
+					reboot init6 重启
+					系统运行级别 0关机 1单用户 2不完全多用户，不含NFS服务 3 完全多用户 4未分配 5图形界面 6重启 /etc/init  runlevel
+					logout
+二：文本编辑器Vim
+	Vim常用操作		a/A 在光标所在 字符/行尾 后插入
+					i/I 在光标所在 字符/行行 前插入
+					o/O 在光标下/上插入新行
+	定位命名		
+					:set un 设置行号
+					:set noun 取消行号
+					gg 到第一行
+					G  到最后一行
+					nG 到第n行
+					:n 到第n行
+					$  移至行尾
+					0  移至行首
+	删除命名
+					x	删除光标所在处字符
+					nx	删除光标所在处后n个字符
+					dd  删除/cut光标所在行，ndd删除/cut n行
+					dG	删除光标所在行到文件末尾内容
+					D	删除光标所在处到行尾内容
+					:n1,n2d 删除指定范围的行
+	复制和剪切命令
+					yy	复制当前行
+					nyy	复制当前行以下n行
+					p/P	粘贴在当前行
+	替换和取消命令
+					r	取消光标所在处字符
+					R	从光标所在处开始替换字符，按Esc结束
+					u	取消上一步操作
+	搜索和搜索替换
+					/string 	搜索指定字符串 搜索时忽略大小写 ：set ic
+					n			搜索指定字符串的下一个出现位置（next）
+					:%s/old/new/g	全文替换指定字符串			g 替换的时候不询问，c替换的时候询问
+					:n1,n2s/old/new/g	在一定范围内替换指定字符串
+					:nohl	搜索退出高亮
+	
+	小技巧			
+					:r !命令	导入命名的执行结果
+					:n1,n2s/^/#/g
+					:n1,n2s/^#//g
+	
+三：软件包管理
+	RPM包管理-rpm命令管理
+		安装升级与卸载
+		rpm -ivh 包全名
+			-i (install)
+			-v (verbose)
+			-h (hash) 显示进度
+			-U (update)
+			-e (erase)	卸载
+			-q (query)	-i 查询软件信息  -p 查询未安装包信息 	rpm -qi 包名 查询软件包详细信息	-l (list) rpm -ql 包名  查询包中文件安装位置 -f 查询系统文件属于那个包	 -R 查询依赖性
+			-a (all)	rpm -qa 查询所有以及安装的RPM包		查询是否安装	rpm -q 包名
+			--nodeps 不检测依赖性
+		校验和包中文件提取
+			-V 校验制定RPM包中的文件 rpm -v 已安装的包名
+		
+	RPM包管理-yum命令管理
+		IP地址配置和网络yum源
+			setup	/etc/sysconfig/network-scripts/ifcfg-eth0	service network restart
+			yum 源	/etc/yum.repos.d/CentOS-Base.repo
+		yum命令
+			yum list 查询所有可用软件包列表
+			yum search 关键字 	搜索服务器上所有和关键字相关的包
+			yum -y install 包名	  -y yes
+			yum -y update 包名
+			yum -y remove 包名 
+			yumdownloader
+			软件组管理命令
+				yum grouplist  yum  groupinstall/groupremove 软件组名
+				
+	源码安装
+		提供更多的可选项 以及更大的自由空间
+		需要gcc 随后 ./configure 	make 	make install
+四：用户管理
+		用户配置文件
+			用户信息文件：/etc/passwd
+			影子文件	：/etc/shadow	9个字段：用户名、加密密码SHA512散列加密（"!!",或者"*" 代表用户不能登录、伪用户）、密码最后一次修改日期（时间戳表示）
+			组信息、组密码文件：/etc/group（组名|组密码标志|GID|组中附加用户） /etc/gshadow（组名|组密码|组管理员用户名|组中附加用户）
+			用户邮箱 /var/spool/mail/用户名/
+			用户模板目录	/etc/sk
+			用户默认配置文件 /etc/default/useradd	/etc/login.defs
+		用户管理命令
+					userdel 用户名 -r 删除用户的同时删除用户家目录
+					useradd 用户名 //添加新用户	-u -d -c -g 组名 -G 组名（指定用户的附加组）-s shell
+					passwd 	用户名	//设置用户密码
+					usermod	修改用户信息
+					change	修改用户密码状态
+					who 查看登录用户的信息
+					w 查看登录用户详细信息
+					groupadd [选项] 组名
+					groupmod [选项] 组名
+					groupdel
+					gpasswd 选项 组名 -a 用户名 -d 用户名 ：把用户从组中删除
+					useradd -G fdse fancying
+五：权限管理
+		查看分区ACL权限是否开启：dumpe2fs -h /dev/sda3 选项：-h 仅显示超级块中信息，而不显示磁盘块组的详细信息
+		永久开启分区ACL权限
+					/etc/fstab 里面	/dev/mapper/centos-root / 	ext4    defaults,acl        1 1		(加上  ",acl"  )
+					mount -o remount / 	#重新挂载文件系统或者重启系统生效
+		ACL权限查看与设定
+					getfacle 文件名 #查看acl权限
+					setfacl	选项 文件名 	
+					
+
+六：文件系统
+
+					
+七：shell编程基础
+		bash 基本功能
+			历史命令与补全
+		
+			别名与快捷键
+			
+			输入输出与重定向
+					设备	设备文件名	文件描述符	类型
+					键盘	/dev/stdin		0		标准输入
+					显示器	/dev/stdout		1		标准输出
+					显示器	/dev/stderr		2		标准错误输出
+					
+					输出重定向	1 > 文件 2>文件
+					> 覆盖		>> 追加
+					命令  > 文件 2>&1	等价于	命令  &> 文件
+					
+					输入重定向	 命令<文件
+			多命令顺序执行与管道符
+				多命令执行符	格式			作用	
+				;				命令1 ; 命令2	顺序执行，命令间没有任何关联
+				&&				命令1 ; 命令2	命令1正确执行 ，命令2才会执行
+				||				命令1 ; 命令2	命令1不正确执行 ，命令2才会执行
+				
+				管道符	命令1 | 命令2 命令1的正确输出作为命名2的操作对象
+				
+			通配符和其他特殊符号
+				通配符		作用
+				？			匹配一个任意字符
+				*			匹配0个或者任意多个任意字符，也就是可以匹配任何内容
+				[]			匹配中括号中任意一个字符。例如：[abc] 代表一定匹配一个字符，a或b或c
+				[-]			匹配中括号中任意一个字符，-代表范围。例如:[a-z]代表匹配一个小写字母
+				[^]      	逻辑非，表示匹配不是中括号内的一个字符
+				Bash中其他特殊的符号
+				''	在单引号中所有的特殊符号，如'$'和'`'(反引号)都没有特殊意义。也就是当初字符串处理而不会被解释。
+				""	在双引号中特殊符号都没有特殊含义，但是"$"、"`"和"\"是例外，分别拥有"调用变量的值"、"引用命令"和"转义符"的特殊含义。
+				``	反引号括起来的内容是系统命令，在bash中会执行它，然后再输出执行的结果进行显示。和$()作用一样，不过推荐使用$()，因为反引号非常容易看错
+				$()	和反引号的作用一样，用来引用系统命令
+				#	在shell脚本中，#开头的行代表注释
+				$	用于调用变量的值，比如需要调用变量name的值时，需要用$name的方式得到变量的值
+				\	转义符的作用，跟在\之后的特殊符号将失去特殊含义，变为普通字符 eg: \$就会输出$符号，而不会把$当作变量引用。
+		bash变量
+			用户自定义变量
+				变量的调用 echo $name
+				查看		set
+				删除 		unset 变量名
+			环境变量
+				用户自定义变量只在当前的shell中生效，而环境变量会在当前shell和这个shell的所有子shell中生效
+				PS1 定义系统体术符的变量
+				echo $PS1	ps1 = '[\u@\h \W]\$ '
+			位置参数变量与预定义变量
+				$# —— 传递给程序的总的参数数目。
+				$? —— 上一个代码或者Shell程序在Shell中退出的情况，如果正常退出则返回0，否则返回非0值。
+				$* —— 传递给程序的所有参数组成的字符串。
+				$n ——表示第n个参数，$1则表示第一个参数，$2表示第二个参数……
+				$0 —— 当前程序的名称。
+				$@ ——以“参数1”、“参数2”……保存所有的参数。
+				$$ —— 本程序的（进程ID）PID。
+				$! —— 上一个命令的PID。
+				
+				接收键盘输入
+				read(选项)(参数)
+					-p：指定读取值时的提示符；
+					-t：指定读取值时等待的时间（秒）
+					-n：read命令只接受指定的字符数，就会执行
+					-s:	隐藏数入的数据，适用于机密信息的输入
+					read -t 30 -p "enter your name: " name 	#输入的保存在变量name中
+					
+			数值运算与运算符
+				declare声明变量类型
+					-：	给变量设定类型属性
+					+：	取消变量的类型属性
+					-i：将变量声明为整数型
+					-x：将变量声明为环境变量
+					-p：显示指定变量的被声明的类型
+				expr 或者 let	dd=$(expr $aa + $bb)
+				$((运算式))	或	$[运算式]
+			变量测试与内容替换
+			
+			环境变量配置文件
+				source 配置文件	或 .配置文件
+				/etc/profile
+				/etc/profile.d/*.sh
+				~/.bash_profile
+				~/.bashrc
+				/etc/bashrc
+			其他配置文件和登录信息
+				注销时生效的环境变量配置文件	~/.bahs_logout
+				~/bash_history
+				本地终端欢迎信息	/etc/issue
+				远程终端欢迎信息 	/etc/issue.net	是否显示此欢迎信息，由ssh的配置文件/etc/ssh/sshd_config 决定，加入Banner /etc/issue.net 行才能显示
+				登录后欢迎信息 /etc/motd
+
+八：linux服务管理			
+
+九：linux系统管理
+
+十：linux日志管理			
+			
+：其他
+		防火墙
+		1、基本操作
+			# 查看防火墙状态
+			service iptables status  
+			# 停止防火墙
+			service iptables stop  
+			# 启动防火墙
+			service iptables start  
+			# 重启防火墙
+			service iptables restart  
+			# 永久关闭防火墙
+			chkconfig iptables off  
+			# 永久关闭后重启
+			chkconfig iptables on　
+		2、开启80端口
+			vim /etc/sysconfig/iptables
+			# 加入如下代码
+			-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+			service iptables restart
+		firewall防火墙
+			1、查看firewall服务状态
+			systemctl status firewalld
+			2、查看firewall的状态
+			firewall-cmd --state
+			3、开启、重启、关闭、firewalld.service服务
+			service firewalld start/restart/stop
+			4、查看防火墙规则
+			firewall-cmd --list-all 
+			5、查询、开放、关闭端口
+			# 查询端口是否开放
+			firewall-cmd --query-port=8001/tcp
+			# 开放8001端口
+			firewall-cmd --permanent --add-port=8001/tcp
+			# 移除端口
+			firewall-cmd --permanent --remove-port=8001/tcp
+			
+		selinux
+			#查看状态
+			getenforce
+			#设置状态 0：关闭 1：启动
+			setenforce 0
+			
+			
+			
+			
+			
+			
+			
+			
