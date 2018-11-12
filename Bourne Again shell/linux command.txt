@@ -45,7 +45,7 @@ linux常用命令学习记录
 					gzip 文件名	 压缩文件 .gz 
 					gunzip 解压缩.gz 的压缩文件
 					tar 打包、解包、压缩、解压缩 	-c打包 -x解包  .tar.gz
-					zip 选项[-r] [压缩后文件名][文件或目录] -r 压缩目录
+					zip 选项[-r] [压缩后文件名][文件或目录] -r 压缩目录 
 					unzip	
 					bzip2
 	网络命令
@@ -294,15 +294,46 @@ linux常用命令学习记录
 			修改/etc/rc.d/rc.local 文件（推荐）
 			使用ntsysv（Redhat专有）命令管理自启动 可以管理基于xinetd的			
 				
-		基于xinetd服务（不占用内存 相应慢）
-		
+		基于xinetd服务（Internet标准超级守护进程）
+			常用来管理多种轻量级Internet服务
+			
 		源码包服务的管理
+			使用绝对路径，调用启动脚本来启动，不同的源码包的启动脚本不同。可以查看源码包的安装说明，查看启动脚本的方法。
+			
+			让源码包的Apache服务能被chkconfig与ntsysv命令管理自启动
+			vi  /etc/init.d/apache
+			# chkconfig:35  86  76			
+			# 指定httpd脚本可以被chkconfig命令管理。格式是：chkconfig：运行级别  启动顺序  关闭顺序			
+			# description:source package  apache			
+			# 说明，内容随意。
 		
 		
-
 九：linux系统管理
+		进程管理
+			查看
+			
+			终止进程
+			
+			工作管理
+			
+			系统资源查看
+			
+			系统定时任务
+		
 
-十：linux日志管理			
+
+十：linux日志管理
+		rsyslog
+		
+		日志轮替
+		
+十一：linux启动管理
+		启动流程-运行级别
+		
+		启动流程-启动过程
+		
+		启动引导程序-grub配置文件
+		
 			
 ：其他
 		防火墙
