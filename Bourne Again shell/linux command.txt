@@ -362,8 +362,22 @@ linux常用命令学习记录
 			dmesg | grep CPU  开机时内核检测信息
 			free
 			缓存和缓冲的区别：cache 是用来加速数据从硬盘中“读取的”，而缓冲（buffer）是用来加速数据“写入”硬盘的
+			查看CPU信息
+			cat /proc/cpuinfo	proc 数据存放在内存中
+			uptime 启动时间与平均负载（top 的第一行）
+			uname	
+				-a：查看系统所有相关信息
+				-r：查看内核版本
+				-s：查看内核名称
+			file /bin/ls	判断当前系统的位数
+			lsb_release -a  查询当前linux系统的发行版本
+			lsof	列出进程打开或者使用的文件信息
 				
 		系统定时任务
+			crontab
+				-e 编辑定时任务
+				-l 查询crontab任务
+				-r 删除当前用户所有的crontab任务
 		
 
 
