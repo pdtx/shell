@@ -11,7 +11,7 @@ linux常用命令学习记录
 					rm -r 递归 -f 强制
 	文件处理命令
 					touch	//可以同时创建多个文件 touch a b 
-					cat 显示文件内容 -n 显示行号
+					cat 显示文件内容 -n 显示行号  -A：显示不可打印字符，行尾显示“$”；
 					tac 显示文件内容（反向列示 从最后一行显示）
 					more （空格）或f 翻页 （enter） 换行 q 退出 //分页显示文件内容
 					less 分页显示文件内容 （可向上翻页 pageup pagedown 可以搜索 eg: /service n 表示next） //less 更好用
@@ -475,7 +475,39 @@ lvm只能扩展，不能缩小，这点要牢记。
 
 chkconfig(选项)
 
-选项
 
+码出高效记录：
+	第一章：计算机基础
+	查看当前系统各个进程产生了多少句柄
+	lsof -n | awk '${print $2}' | sort | uniq -c | sort -nr | more
 
+	查看TCP连接状态的计数情况
+	netstat -n | awk '/^tcp/ {++S[$NF]} END {for (a in S) print a,s[a]}'
+	
+	TCP 连接中将TIME_WAIt超时时间调小
+	/etc/sysctl.conf	net.ipv4.tcp_fin_timeout=30
+			
+			
+			
+分布式服务架构 原理、设计与实战
+	第六章： Java 服务的线上应急和技术攻关
+	JVM 提供的监控命令
+		jad 反编译字节码 分析程序的实际执行流程
+			jad test.class
+		
+		btrace	可以动态地跟踪Java运行时程序，将定制化的跟踪字节码切面注入运行类中，对代码无侵入，对性能的影响也可以忽略不计
+			brace [-p port] [-cp classpath] pid btrace-script
+				btrace-script 跟踪切面的脚本
+				
+		jmap 查看java进程对内存的使用情况 jmap是jdk自带的工具
+			  帮助定位Java 进程占用内存较大或者底层底层动态链接库占用内存较大的问题
+			  通过jmap 命令导出 Java 堆快照，然后通过其他工具甚至可视化内存分析工具（JHAT、JMAT、JProfiler、Jconsole、JVisualVM）
+			jmap -dump:format=b,file=./heap.hprof pid
+			
+		jstat 与jamp相比 更倾向于输出累积的信息与打印GC等的统计信息
+			jstat -gcutil pid 5000(时间间隔ms) 10(次数)
+		
+		jstack 打印给定的java进程ID的线程堆栈快照信息 java进程内线程的执行状态、正在执行的任务等，分析线程等待、死锁等问题
+		
+		jinfo 输出并修改运行时的Java进程的环境变量和虚拟机参数
 			
