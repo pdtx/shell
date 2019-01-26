@@ -527,8 +527,6 @@ chkconfig(选项)
 			
 			
 			
-			
-			
-			
-			
+
+notation：
 xargs 与 管道符的区别
