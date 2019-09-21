@@ -140,7 +140,8 @@ linux常用命令学习记录
 		需要gcc 随后 ./configure 	make 	make install
 四：用户管理
 		用户配置文件
-			用户信息文件：/etc/passwd
+			用户信息文件：/etc/passwd     1.用户名 2.密码，隐藏的所以用x表示 3.用户id，大于500，一般500以内的为系统用户使用 
+											4.用户组id 5.用户注释可以为空 6.用户家目录位置 7.用户默认Shell
 			影子文件	：/etc/shadow	9个字段：用户名、加密密码SHA512散列加密（"!!",或者"*" 代表用户不能登录、伪用户）、密码最后一次修改日期（时间戳表示）
 			组信息、组密码文件：/etc/group（组名|组密码标志|GID|组中附加用户） /etc/gshadow（组名|组密码|组管理员用户名|组中附加用户）
 			用户邮箱 /var/spool/mail/用户名/
@@ -172,6 +173,10 @@ linux常用命令学习记录
 					
 
 六：文件系统
+	fdisk
+	gdisk
+		查看磁盘的UUId
+			blkid	ls -l /dev/disk/by-uuid
 
 					
 七：shell编程基础
