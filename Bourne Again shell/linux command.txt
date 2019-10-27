@@ -422,6 +422,8 @@ linux常用命令学习记录
 			# 加入如下代码
 			-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 			service iptables restart
+			
+			
 		firewall防火墙
 			1、查看firewall服务状态
 			systemctl status firewalld
@@ -529,9 +531,54 @@ chkconfig(选项)
 			
 			
 			
-			
+守护进程：
+	后台运行不受终端控制的进程（如输入、输出）、一般的网络服务都是以守护进程的方式运行
 			
 			
 
 notation：
 xargs 与 管道符的区别
+
+
+从这周开始，我们每周开一次组会，组会内容：介绍自己的工作，每周工作小结，问题讨论；
+组会之后进行技术分享（技术分享的内容包括：问题解决方案与思路、知识点、优化策略等，比如：druid配置数据库加密后springboot启动出错解决方案、redis使用介绍、SQL优化策略等）
+
+组会时间暂定周五下午
+技术分享频率暂定 1人/周
+
+
+
+
+
+
+
+
+代码库工作：思聪 代码读取服务 【代码库服务 是提供稳定的jar包 还是啥 】
+
+
+
+sonarqube 调研
+	内容如下：
+	用法：
+	怎么安装
+	centos系统上怎么使用 （输入什么 输出什么）
+	输出结果解析
+
+
+
+
+生产环境
+测试环境
+
+
+sonarqube
+p3c
+
+
+
+
+
+
+
+
+
